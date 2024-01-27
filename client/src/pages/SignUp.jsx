@@ -28,7 +28,7 @@ function SignUp() {
         </div>
           <div>
         <Label value='Password'/>
-        <TextInput type='text' placeholder='Password' id='password'/>
+        <TextInput type='password' placeholder='Password' id='password'/>
         </div>
         <Button gradientDuoTone='purpleToBlue' type='submit'>
           Signup
