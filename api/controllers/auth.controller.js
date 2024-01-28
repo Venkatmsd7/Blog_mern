@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/errorhandler.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const signup=async(req,res,next)=>{
     const{username,email,password}=req.body
@@ -21,6 +22,40 @@ export const signup=async(req,res,next)=>{
         if (user) res.status(200).json(user);
     } catch (error) {
         next(errorHandler(400,"Cannot create user"))
+    }
+
+}
+export const signin= async(req,res,next)=>{
+    const {email,password}=req.body
+    
+    try {
+        
+        const user= await User.findOne({email})
+        if(!user){
+           return next(errorHandler(400,"User not found"));
+        }
+        console.log(user._id)
+        const validPassword= bcrypt.compareSync(password,user.password)
+        if(!validPassword){
+            return next(400,"invalid Password")
+        }
+        console.log(validPassword)
+
+        const token= jwt.sign({
+            id: user._id, 
+            isAdmin: user.isAdmin
+        },
+        process.env.JWT_SECRET)
+
+        console.log(token)
+
+        
+        
+        res.status(200).cookie('access_token',token,{
+            httpOnly:true,
+        }).json(user)
+    } catch (error) {
+        next(error)
     }
 
 }

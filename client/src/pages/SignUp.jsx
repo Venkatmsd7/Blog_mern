@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { Label,Button,Alert,TextInput } from 'flowbite-react';
 
 
 function SignUp() {
   const [formData,setformData]=useState({});
-  const [errorMsg,seterrorMsg]=useState(null)
-  const [loading,setloading]=useState(null)
+  const [errorMsg,seterrorMsg]=useState(null);
+  const [loading,setloading]=useState(null);
+  const navigate=useNavigate();
   const handleChange=(e)=>{
     setformData({...formData,[e.target.id]:e.target.value.trim()})
   }
@@ -24,6 +25,14 @@ function SignUp() {
         body: JSON.stringify(formData),
       })
       const data=await res.json();
+      if (data.success === false) {
+        return seterrorMsg(data.message);
+      }
+      setloading(false);
+      if(res.ok) {
+        navigate('/signin');
+      }
+
     } catch (error) {
       
     }
@@ -57,8 +66,15 @@ function SignUp() {
         <Label value='Password'/>
         <TextInput type='password' placeholder='Password' id='password' onChange={handleChange}/>
         </div>
-        <Button gradientDuoTone='purpleToBlue' type='submit' >
-          Signup
+        <Button gradientDuoTone='purpleToBlue' type='submit' disabled={loading} >
+        {loading ? (
+                <>
+                  <Spinner size='sm' />
+                  <span className='pl-3'>Loading...</span>
+                </>
+              ) : (
+                'Sign Up'
+              )}
         </Button>
         </form>
         <div className='mt-4'>
