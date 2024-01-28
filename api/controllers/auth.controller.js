@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/errorhandler.js";
 import bcrypt from "bcrypt";
+
 export const signup=async(req,res,next)=>{
     const{username,email,password}=req.body
     
@@ -15,7 +16,7 @@ export const signup=async(req,res,next)=>{
         const user= await User.create({
             username,
             email,
-            password
+            password:hashedpaasword
         })
         if (user) res.status(200).json(user);
     } catch (error) {

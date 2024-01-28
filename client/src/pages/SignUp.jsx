@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Label,Button,Alert,TextInput } from 'flowbite-react';
 
+
 function SignUp() {
+  const [formData,setformData]=useState({});
+  const [errorMsg,seterrorMsg]=useState(null)
+  const [loading,setloading]=useState(null)
+  const handleChange=(e)=>{
+    setformData({...formData,[e.target.id]:e.target.value.trim()})
+  }
+
+  const handleSubmit= async (e)=>{
+    e.preventDefault();
+    if(!formData.username||!formData.email||!formData.password){
+      return seterrorMsg("Please fill all the details!!");
+    }
+    
+    try {
+      const res= await fetch('http://localhost:8000/api/auth/signup',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(formData),
+      })
+      const data=await res.json();
+    } catch (error) {
+      
+    }
+
+  }
+  console.log("outside",errorMsg)
   return (
     <div className='min-h-screen mt-20'>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center'>
@@ -17,20 +44,20 @@ function SignUp() {
       </p>
       </div>
       <div className='flex-1'>
-        <form className='flex flex-col gap-5'>
+        <form className='flex flex-col gap-5' onSubmit={handleSubmit}>
           <div>
         <Label value='Username'/>
-        <TextInput type='text' placeholder='Username' id='username'/>
+        <TextInput type='text' placeholder='Username' id='username' onChange={handleChange}/>
         </div>
           <div>
         <Label value='Email'/>
-        <TextInput type='email' placeholder='abcd@example.com' id='email'/>
+        <TextInput type='email' placeholder='abcd@example.com' id='email' onChange={handleChange}/>
         </div>
           <div>
         <Label value='Password'/>
-        <TextInput type='password' placeholder='Password' id='password'/>
+        <TextInput type='password' placeholder='Password' id='password' onChange={handleChange}/>
         </div>
-        <Button gradientDuoTone='purpleToBlue' type='submit'>
+        <Button gradientDuoTone='purpleToBlue' type='submit' >
           Signup
         </Button>
         </form>
@@ -40,7 +67,14 @@ function SignUp() {
           Signin
           </Link>
         </div>
-
+        {
+          
+          errorMsg && (
+            <Alert color='failure' >
+      {errorMsg}
+    </Alert>
+          )
+        }
       </div>
     </div>
     </div>

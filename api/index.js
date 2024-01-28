@@ -3,6 +3,8 @@ import express, { urlencoded } from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import authroutes from "./routes/auth.route.js";
+import cors from "cors";
+
 dotenv.config()
 
 mongoose.connect(`${process.env.MONGO_URI}/${"Blog"}`).then(()=>{
@@ -16,6 +18,9 @@ app.listen(8000,(req,res)=>{
     console.log("Server is running")
 })
 
+app.use(cors({
+    origin: "*"
+}))
 app.use(express.json())
 app.use(express.urlencoded())
 app.use(cookieParser())
