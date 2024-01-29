@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Label,Button,Alert,TextInput } from 'flowbite-react';
-
-
+import { Link,useNavigate } from 'react-router-dom';
+import { Label,Button,Alert,TextInput,Spinner } from 'flowbite-react';
+import { useDispatch,useSelector } from 'react-redux';
+import { signInStart,signInFailure,signInSuccess} from '../redux/user/userSlice';
 function SignIn() {
   const [formData,setformData]=useState({});
-  const [errorMsg,seterrorMsg]=useState(null)
-  const [loading,setloading]=useState(null)
+  const {loading,error:errorMsg}=useSelector((state)=>(state.user))
+  
+  const dispatch=useDispatch()
+  const navigate=useNavigate()
   const handleChange=(e)=>{
     setformData({...formData,[e.target.id]:e.target.value.trim()})
   }
@@ -14,18 +16,27 @@ function SignIn() {
   const handleSubmit= async (e)=>{
     e.preventDefault();
     if(!formData.email||!formData.password){
-      return seterrorMsg("Please fill all the details!!");
+      return dispatch(signInFailure('Please fill all the fields'));
     }
     
     try {
+      dispatch(signInStart())
       const res= await fetch('http://localhost:8000/api/auth/signin',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify(formData),
       })
       const data=await res.json();
-    } catch (error) {
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+      }
       
+      if(res.ok) {
+        dispatch(signInSuccess(data))
+        navigate('/');
+      }
+    } catch (error) {
+      dispatch(signInFailure(error.message))
     }
 
   }
@@ -53,8 +64,15 @@ function SignIn() {
         <Label value='Password'/>
         <TextInput type='password' placeholder='Password' id='password' onChange={handleChange}/>
         </div>
-        <Button gradientDuoTone='purpleToBlue' type='submit' >
-          Signup
+        <Button gradientDuoTone='purpleToBlue' type='submit' disabled={loading} >
+        {loading ? (
+                <>
+                  <Spinner size='sm' />
+                  <span className='pl-3'>Loading...</span>
+                </>
+              ) : (
+                'Sign Up'
+              )}
         </Button>
         </form>
         <div className='mt-4'>

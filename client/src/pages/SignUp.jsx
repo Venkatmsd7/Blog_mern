@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
-import { Label,Button,Alert,TextInput } from 'flowbite-react';
+import { Label,Button,Alert,TextInput,Spinner } from 'flowbite-react';
 
 
 function SignUp() {
