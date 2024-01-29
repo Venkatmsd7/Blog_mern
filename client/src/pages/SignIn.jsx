@@ -3,6 +3,7 @@ import { Link,useNavigate } from 'react-router-dom';
 import { Label,Button,Alert,TextInput,Spinner } from 'flowbite-react';
 import { useDispatch,useSelector } from 'react-redux';
 import { signInStart,signInFailure,signInSuccess} from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
 function SignIn() {
   const [formData,setformData]=useState({});
   const {loading,error:errorMsg}=useSelector((state)=>(state.user))
@@ -71,13 +72,14 @@ function SignIn() {
                   <span className='pl-3'>Loading...</span>
                 </>
               ) : (
-                'Sign Up'
+                'Sign In'
               )}
         </Button>
+        <OAuth/>
         </form>
         <div className='mt-4'>
-          <span>Have an account? </span>
-          <Link to='/signin' className='font-semibold text-blue-600'>
+          <span>Don't have an account? </span>
+          <Link to='/signup' className='font-semibold text-blue-600'>
           Signup
           </Link>
         </div>

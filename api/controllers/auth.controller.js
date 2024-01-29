@@ -49,7 +49,7 @@ export const signin= async(req,res,next)=>{
 
         console.log(token)
 
-        
+        const loggedInUser=await User.findOne({email}).select('-password')
         
         res.status(200).cookie('access_token',token,{
             httpOnly:true,
@@ -58,4 +58,29 @@ export const signin= async(req,res,next)=>{
         next(error)
     }
 
+}
+
+export const google= async (req,res,next)=>{
+    const {name,email,photoUrl}=req.body
+    try {
+        const user= await User.findOne({email}).select('-password')
+        if (user){
+            const token= jwt.sign(
+                { id: user._id, isAdmin: user.isAdmin },
+                process.env.JWT_SECRET
+              );
+        
+        res.status(200)
+        .cookie("access_token",token,{
+            httpOnly:true
+        })
+        .json(user)
+    }
+    else{
+        res.status(400).message("User not found. Please signup")
+    }
+    
+    }catch(error){
+        console.log(error)
+    }
 }
