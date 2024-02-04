@@ -8,7 +8,7 @@ export const signup=async(req,res,next)=>{
     
     if (!username||!email||!password||username===''||email===''||password===''){
         console.log(req.body)
-        // next(errorHandler(400,"All fields are required"))
+        next(errorHandler(400,"All fields are required"))
     }
 
     const hashedpaasword= bcrypt.hashSync(password,10);
@@ -77,10 +77,23 @@ export const google= async (req,res,next)=>{
         .json(user)
     }
     else{
-        res.status(400).message("User not found. Please signup")
+        res.status(400)
     }
     
     }catch(error){
         console.log(error)
+    }
+}
+
+export const signout=async(req,res,next)=>{
+    try {
+
+        console.log("signout started")
+        res.clearCookie('access_token')
+        .status(200)
+        console.log("signout ended")
+        
+    } catch (error) {
+        next(error)
     }
 }

@@ -3,6 +3,7 @@ import express, { urlencoded } from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import authroutes from "./routes/auth.route.js";
+import userroutes from "./routes/user.routes.js"
 import cors from "cors";
 
 dotenv.config()
@@ -28,3 +29,4 @@ app.use(cookieParser())
 // Routes
 
 app.use('/api/auth',authroutes)
+app.use('/api/user',userroutes)
