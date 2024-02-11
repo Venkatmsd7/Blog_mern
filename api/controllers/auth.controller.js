@@ -89,8 +89,8 @@ export const signout=async(req,res,next)=>{
     try {
 
         console.log("signout started")
-        res.clearCookie('access_token')
-        .status(200)
+        res.status(200).clearCookie('access_token')
+        
         console.log("signout ended")
         
     } catch (error) {

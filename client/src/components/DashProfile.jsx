@@ -1,6 +1,7 @@
 import { Alert, Button, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 function DashProfile() {
     const {currentUser}=useSelector((state)=>state.user)
@@ -32,7 +33,7 @@ function DashProfile() {
       
       try {
         const res = await fetch("http://localhost:8000/api/user/update",{
-        method:"POST",
+        method:"PUT",
         headers:{'Content-Type':'applicatrion/json'},
         body: JSON.stringify(formData)
         })
@@ -71,11 +72,22 @@ function DashProfile() {
             onChange={handleChange}
             />
             <Button gradientDuoTone='purpleToBlue' type='submit'>Update</Button>
+            {currentUser.isAdmin && (
+          <Link to={'/createpost'}>
+            <Button
+              type='button'
+              gradientDuoTone='purpleToPink'
+              className='w-full'
+            >
+              Create a post
+            </Button>
+          </Link>
+        )}
+        </form>
             <div className='text-red-600 flex justify-center'>
                 <span className='mr-3 text-sm'>Delete account</span>
                 <span className='text-sm '>Sign Out</span>
             </div>
-        </form>
     </div>
   )
 }
