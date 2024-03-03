@@ -51,9 +51,11 @@ export const signin= async(req,res,next)=>{
 
         const loggedInUser=await User.findOne({email}).select('-password')
         
-        res.status(200).cookie('access_token',token,{
+        res.cookie('access_token',token,{
             httpOnly:true,
-        }).json(user)
+            samesite:"none",
+            
+        }).status(200).json(user)
     } catch (error) {
         next(error)
     }

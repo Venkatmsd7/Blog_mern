@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextInput,Select,FileInput, Button } from 'flowbite-react'
+import { TextInput,Select,FileInput, Button,Alert } from 'flowbite-react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { app } from '../firebase';
@@ -8,9 +8,11 @@ function CreatePost() {
     const [category,setCategory]=useState("No category");
     const [file, setFile] = useState(null);
     const [content,setContent]=useState("")
-    const [imageUploadError,setImageUploadError]=useState(null);
+    const [UploadError,setUploadError]=useState(null);
+    const [loading,setLoading]=useState(false)
     const handleSubmit=async (e)=>{
         e.preventDefault();
+        setLoading(true)
         const formData = new FormData();
         formData.append('title',title);
         formData.append('category',category);
@@ -24,14 +26,23 @@ function CreatePost() {
                 method:"POST",
                 body:formData,
                 // headers: {
-                //     'Content-Type':'multipart/form-data'
-                //   }
+                //      'Content-Type':'multipart/form-data',
+                     
+                //    }
+                credentials:"include",
             });
             if(res.ok){
                 console.log("Data uploaded");
-            }
+                setLoading(false)
+                            }
+            else{
+                setLoading(false)
+            }                
         } catch (error) {
             console.log(error);
+            setLoading(false)
+            setUploadError(`Unable to create Post : ${error}`)
+
         }
     }
     
@@ -67,9 +78,15 @@ function CreatePost() {
             
             <ReactQuill className='h-72 mb-20' onChange={(value)=>setContent(value)}/>
 
-            <Button gradientDuoTone='greenToBlue' type='submit'>Create</Button>
-            
+            <Button gradientDuoTone='greenToBlue' type='submit' disabled={loading}>
+                {
+                    !loading? "Create": "Creating..."
+
+            }
+                </Button>
+            {UploadError && (<Alert>{UploadError}</Alert>)}
         </form>
+
     </div>
   )
 }

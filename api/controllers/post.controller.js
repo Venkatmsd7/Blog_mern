@@ -15,17 +15,50 @@ export const create= async(req,res)=>{
          content,
          title,
          image:result.url,
-         slug:"jenfbwjrgbn",
+         slug:title.trim(" "),
          userId
      })
      console.log(post);
     
  
-     res.status(200).json({"message":"received"})
+     res.status(200).json(post)
    } catch (error) {
     console.log(error)
      res.status(500).json({'error':error.message})
    }
+}
+
+export const getPosts=async(req,res,next)=>{
+  
+  try {
+    const {userId,page}=req.query
+    console.log(userId);
+    const posts= await Post.aggregate([
+      {
+        $match:{
+          userId:userId
+        }
+      },
+      {
+        $sort:{updatedAt:1}
+      },
+      {
+        $skip:6*(page-1)
+      },
+      {
+        $limit:page*6
+      },
+      
+    ])
+  
+    return res.status(200).json(posts)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const deletePost=async()=>{
+  const {postId}=req.query
 }
 
 // export const uploadimage=async(req,res)=>{
