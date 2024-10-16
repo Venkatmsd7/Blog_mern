@@ -34,9 +34,13 @@ function DashPosts() {
         }
         
     }
-    const handleDelete=async()=>{
+    const handleDelete= async(postId)=>{
       try {
-        const res=await fetch("")
+        const res= await fetch(`http://localhost:8000/api/post/deletepost?postId=${postId}`,
+        {
+          method:'DELETE'
+        });
+        setItems(items=>items.filter(item=>item._id!=postId))
       } catch (error) {
         
       }
@@ -59,11 +63,11 @@ function DashPosts() {
 
   return (
     <div className='flex flex-col w-full'>
-      {items.map(post=>(<div className='border rounded-md border-green-600 min-h-20 my-3 max-w-screen-xl mx-3 flex flex-row space-x-10 justify-between'>
+      {items.map((post,idx)=>(<div key={idx} className='border rounded-md border-green-600 min-h-20 my-3 max-w-screen-xl mx-3 flex flex-row space-x-10 justify-between'>
       <div className='w-20 pt-5'>{post.title}</div>
       <div className='pt-5'><img className='w-10 h-10' src={post.image}/></div>
       <div className='pt-5'>{post.category}</div>
-      <Button gradientDuoTone='greenToBlue' className='w-20 h-10 m-auto'>Delete</Button>
+      <Button gradientDuoTone='greenToBlue' className='w-20 h-10 m-auto' onClick={()=>handleDelete(post._id)}>Delete</Button>
       <Button gradientDuoTone='greenToBlue' className='w-20 h-10 m-auto'>Edit</Button>
 
       </div>))}

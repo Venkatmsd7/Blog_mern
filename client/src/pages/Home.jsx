@@ -1,8 +1,8 @@
 import React from 'react'
 
-function Home() {
+const Home = () => {
   return (
-    <div className='h-screen'>Home</div>
+    <div>Home</div>
   )
 }
 

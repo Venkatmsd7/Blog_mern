@@ -17,7 +17,7 @@ function Dashboard() {
   
   
   return (
-    <div className='h-screen flex flex-col md:flex-row'>
+    <div className='flex flex-col md:flex-row '>
       <Dashsidebar tab={tab}/>
       {tab=='profile' && <DashProfile/>}
       {tab=='posts' && <DashPosts/>}

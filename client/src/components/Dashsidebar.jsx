@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 function Dashsidebar({tab}) {
   return (
     <div>
-        <Sidebar className='w-full md:w-56'>
+        <Sidebar className='w-full md:w-56 mr-5 h-screen'>
             <SidebarItems>
                 <SidebarItemGroup>
                     <Link to='/dashboard?tab=profile'>
